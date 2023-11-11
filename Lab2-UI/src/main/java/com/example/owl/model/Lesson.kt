@@ -16,6 +16,7 @@
 
 package com.example.owl.model
 
+import android.content.Context
 import androidx.compose.runtime.Immutable
 
 @Immutable

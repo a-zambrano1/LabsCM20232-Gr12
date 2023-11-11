@@ -17,6 +17,9 @@
 package com.example.owl
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.compose.AsyncImage
@@ -25,10 +28,28 @@ import com.example.owl.ui.utils.UnsplashSizingInterceptor
 @Suppress("unused")
 class OwlApplication : Application(), ImageLoaderFactory {
 
-    /**
-     * Create the singleton [ImageLoader].
-     * This is used by [AsyncImage] to load images in the app.
-     */
+    companion object{
+        const val CHANNEL_ID = "my_channel"
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, "reproduccion de video", NotificationManager.IMPORTANCE_HIGH)
+
+            // Register the channel with the system
+            channel.description = "este canal se usa para avisar reproducciones de video"
+            val notificationManager= this.getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+            }
+        }
+
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .components {

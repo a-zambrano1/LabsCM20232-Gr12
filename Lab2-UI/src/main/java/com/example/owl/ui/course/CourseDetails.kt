@@ -16,6 +16,10 @@
 
 package com.example.owl.ui.course
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -71,12 +75,14 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -90,6 +96,7 @@ import com.example.owl.model.CourseRepo
 import com.example.owl.model.Lesson
 import com.example.owl.model.LessonsRepo
 import com.example.owl.model.courses
+import com.example.owl.services.NotificationIntentService
 import com.example.owl.ui.common.CourseListItem
 import com.example.owl.ui.common.OutlinedAvatar
 import com.example.owl.ui.theme.BlueTheme
@@ -463,11 +470,16 @@ private fun Lessons(
     }
 }
 
+
 @Composable
 private fun Lesson(lesson: Lesson) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier
-            .clickable(onClick = { /* todo */ })
+            .clickable{ Intent(context.applicationContext, NotificationIntentService::class.java).also {
+                context.startService(it); Log.d("sisaz", "NOTTINGHAM")
+            } }
             .padding(vertical = 16.dp)
     ) {
         NetworkImage(
@@ -516,6 +528,8 @@ private enum class SheetState { Open, Closed }
 
 private val LazyListState.isScrolled: Boolean
     get() = firstVisibleItemIndex > 0 || firstVisibleItemScrollOffset > 0
+
+
 
 @Preview(name = "Course Details")
 @Composable
@@ -573,3 +587,4 @@ private fun RelatedCoursesPreview() {
         selectCourse = { }
     )
 }
+
